@@ -24,12 +24,19 @@ public:
     bool low;
     bool medium;
     bool high;
+    int easy_time = 0;
 
     // print output
     void output() {
         while(true) {
-            if (medium) {
+            easy_time ++;
+
+            if (high) {
                 std::cout << "X" << std::flush;
+            } else if (medium) {
+                std::cout << "x" << std::flush;
+            } else if (low) {
+                std::cout << "." << std::flush;
             } else {
                 std::cout << "_" << std::flush;
             }
@@ -41,9 +48,15 @@ public:
     void input() {
         char user_input;
         while(true) {
-            // std::cin >> user_input;
             user_input = getchar();
-            std::cout << "*" << std::flush;
+            // toggle states
+            if (user_input == 'h') {
+                high = !high;
+            } else if (user_input == 'm') {
+                medium = !medium;
+            } else if (user_input == 'l') {
+                low = !low;
+            };
         }
     }
 
@@ -71,10 +84,10 @@ int main()
     signal(SIGINT, catch_interrupt);
 
     Alarm *alarm = new Alarm();
-    // std::thread output_thread = alarm->output_t();
+    std::thread output_thread = alarm->output_t();
     std::thread input_thread = alarm->input_t();
 
-    // output_thread.join();
+    output_thread.join();
     input_thread.join();
     std::cout<<"Done"<<std::endl;
     return 0;
