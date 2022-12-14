@@ -12,10 +12,18 @@ Alarm::Alarm() {
 
 // alarm threads
 void Alarm::start() {
-    output_thread = std::thread([=] {output();});
+    running = true;
+    output_thread = std::thread([=] {output(0);});
     input_thread = std::thread([=] {input();});
     output_thread.join();
     input_thread.join();
+}
+
+void Alarm::start_timed(int secs) {
+    running = true;
+    output_thread = std::thread([=] {output(secs);});
+    output_thread.join();
+    stop();
 }
 
 // output summary
@@ -25,8 +33,8 @@ void Alarm::stop() {
 }
 
 // print output
-void Alarm::output() {
-    while(true) {
+void Alarm::output(int max_time) {
+    while(running && (max_time == 0 || easy_time < max_time)) {
         if (restart_pattern) {
             // when an alarm is triggered, start at the pattern beginning
             pattern_loc = 0;
@@ -43,12 +51,13 @@ void Alarm::output() {
         pattern_loc ++;
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
+    running = false;
 }
 
 // listen for input
 void Alarm::input() {
     char user_input;
-    while(true) {
+    while(running) {
         user_input = getchar();
         set_priority(user_input);
     }

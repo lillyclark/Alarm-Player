@@ -29,11 +29,15 @@ public:
     // start
     void start();
 
+    // for testing
+    void start_timed(int secs);
+
     // stop
     void stop();
 
     // print output
-    void output();
+    // if max_time is zero, runs forever
+    void output(int max_time);
 
     // listen for input
     void input();

@@ -26,8 +26,8 @@ int TestIsHigh(Alarm *a) {
 
 int TestTimeElapsed(Alarm *a, int ms) {
     int elapsed = a->easy_time;
-    int epsilon = 10; // mercy in ms
-    std::cout << "timer drifted by " << (elapsed*250 - ms) << " ms." << std::endl;
+    int epsilon = 20; // mercy in ms
+    std::cout << "Timer drifted by " << (elapsed*250 - ms) << " ms." << std::endl;
     return (elapsed*250 - ms < epsilon);
 }
 
@@ -102,16 +102,27 @@ int main(){
         count_successes++;
     } else {std::cerr << "'h' did not maintain priority." << std::endl;}
     count_tests ++;
+    a->set_priority('h'); // toggle off
 
-    // /* TEST TIMING */
-    // // start stopwatch
-    // auto start = std::chrono::high_resolution_clock::now();
-    // auto stop = std::chrono::high_resolution_clock::now();
-    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop-start);
-    // if (TestTimeElapsed(a, duration.count())) {
-    //     count_successes++;
-    // } else {std::cerr << "timer drifted too much :(" << std::endl;}
-    // count_tests ++;
+    std::cout << count_successes << " out of " <<  count_tests << " tests passed!" << std::endl;
+
+    /* TEST TIMING */
+    std::cout << "starting 10 second alarm (no user input accepted)..." << std::endl;
+
+    // start stopwatch
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // run for 40 units (each 250ms)
+    a->start_timed(40);
+
+    // stop startwatch
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop-start);
+
+    if (TestTimeElapsed(a, duration.count())) {
+        count_successes++;
+    } else {std::cerr << "timer drifted too much :(" << std::endl;}
+    count_tests ++;
 
     std::cout << count_successes << " out of " <<  count_tests << " tests passed!" << std::endl;
 
