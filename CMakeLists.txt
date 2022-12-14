@@ -7,7 +7,11 @@ elseif(WIN32)
     message("This is a Windows System (not tested)")
 endif()
 
-add_executable(alarm_player src/main.cpp)
+
+add_executable(alarm_player
+        src/Alarm.h
+        src/Alarm.cpp
+        src/main.cpp)
 
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
