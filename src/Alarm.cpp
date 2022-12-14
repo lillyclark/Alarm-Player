@@ -1,23 +1,21 @@
 #include "Alarm.h"
-
 #include <iostream>
-#include <unistd.h>
-#include <thread>
-#include <chrono>
-#include <termios.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
 
-// constructor
+// constructor makes the pattern strings
 Alarm::Alarm() {
-    std::cout << "Create alarm" << std::endl;
+    low_pattern = "XXXX";
+        for (int i=0; i < 29; i++) {low_pattern.append("____");};
+    medium_pattern = "X___";
+    high_pattern = "X_X_X_X_X_________";
 };
 
-// destructor
-Alarm::~Alarm() {
-    std::cout << "Destroy alarm" << std::endl;
-};
+// start the alarm threads
+void Alarm::start() {
+    output_thread = std::thread([=] {output();});
+    input_thread = std::thread([=] {input();});
+    output_thread.join();
+    input_thread.join();
+}
 
 // print output
 void Alarm::output() {
@@ -61,19 +59,4 @@ void Alarm::input() {
             restart_pattern = true;
         };
     }
-}
-
-std::thread Alarm::output_t() {
-    return std::thread([=] {output();});
-}
-
-std::thread Alarm::input_t() {
-    return std::thread([=] {input();});
-}
-
-void Alarm::make_patterns() {
-    low_pattern = "XXXX";
-        for (int i=0; i < 29; i++) {low_pattern.append("____");};
-    medium_pattern = "X___";
-    high_pattern = "X_X_X_X_X_________";
 }

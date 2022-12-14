@@ -3,7 +3,6 @@
 #include <thread>
 #include <stdio.h>
 
-/* ALARM */
 class Alarm {
 public:
     bool low;
@@ -18,26 +17,19 @@ public:
     std::string medium_pattern;
     std::string high_pattern;
 
+    std::thread output_thread;
+    std::thread input_thread;
+
     // constructor
     Alarm();
 
-    // destructor
-    ~Alarm();
+    // start
+    void start();
 
     // print output
     void output();
 
     // listen for input
     void input();
-
-    // make output thread
-    std::thread output_t();
-
-    // make input thread
-    std::thread input_t();
-
-    // set up alarm patterns
-    void make_patterns();
-
 };
 #endif
