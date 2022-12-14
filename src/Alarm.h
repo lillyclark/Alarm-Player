@@ -9,10 +9,13 @@ public:
     bool medium;
     bool high;
 
+    bool running;
+
     int easy_time;
     int pattern_loc;
     bool restart_pattern;
 
+    std::string off_pattern;
     std::string low_pattern;
     std::string medium_pattern;
     std::string high_pattern;
@@ -26,10 +29,22 @@ public:
     // start
     void start();
 
+    // stop
+    void stop();
+
     // print output
     void output();
 
     // listen for input
     void input();
+
+    // set priority
+    void set_priority(char user_input);
+
+    // get priority (0-off, 1-low, 2-med, 3-high)
+    int get_priority();
+
+    // get pattern
+    std::string get_pattern(int priority);
 };
 #endif

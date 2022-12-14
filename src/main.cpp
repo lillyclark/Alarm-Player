@@ -8,15 +8,13 @@
 // to store terminal input settings
 struct termios oldt, newt;
 
-// create alarm object
+// create alarm
 Alarm *myAlarm = new Alarm();
 
 void catch_interrupt(int signum) {
     // reset the terminal input settings
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    // print out summary
-    std::cout << std::endl << "Elapsed time: " << myAlarm->easy_time*250 << " ms ";
-    std::cout << "(" << myAlarm->easy_time << " characters printed)" << std::endl;
+    myAlarm->stop();
     exit(signum);
 }
 
