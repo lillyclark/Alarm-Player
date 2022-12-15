@@ -6,9 +6,9 @@ MEDIUM: one beep every second, with a beep duration of 250ms. Repeat continuousl
 HIGH: five beeps every 500ms with duration of 250ms each, then wait for 2s with no beep.
 Repeat continuously.  
 
-`Alarm.h` is the header file.  
-`Alarm.cpp` implements the Alarm.  
-`main.cpp` is the client and shows example usage of the Alarm API.
+`src/Alarm.h` is the header file.  
+`src/Alarm.cpp` implements the Alarm.  
+`src/main.cpp` is the client and shows example usage of the Alarm API.
 
 ## How to build
 This code is cmake-based. After cloning this repository,  
@@ -19,7 +19,7 @@ This code is cmake-based. After cloning this repository,
 will produce an executable `./alarm_player`.
 
 ## How to test
-Several simple unit tests are provided in `test.cpp`. Run `make test` to build the tests and `./test` to run.
+Several simple unit tests are provided in `src/test.cpp`. Run `make test` to build the tests and `./test` to run.
 
 ## How to use
 After building, run `./alarm_player` to start the alarm. Pressing `h`, `m`, and `l` toggle the high, medium, and low priority alarms.
