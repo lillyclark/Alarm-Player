@@ -25,7 +25,7 @@ int TestIsHigh(Alarm *a) {
 }
 
 int TestTimeElapsed(Alarm *a, int ms) {
-    int elapsed = a->easy_time;
+    int elapsed = a->check_time();
     int epsilon = 20; // mercy in ms
     std::cout << "Timer drifted by " << (elapsed*250 - ms) << " ms." << std::endl;
     return (elapsed*250 - ms < epsilon);
@@ -124,6 +124,7 @@ int main(){
     } else {std::cerr << "timer drifted too much :(" << std::endl;}
     count_tests ++;
 
+    // Summary of all tests
     std::cout << count_successes << " out of " <<  count_tests << " tests passed!" << std::endl;
 
     return 0;

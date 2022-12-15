@@ -1,17 +1,27 @@
 #include "Alarm.h"
 #include <iostream>
+#include <unistd.h>
 
-// constructor makes the pattern strings
+// constructor makes the pattern strings, stores terminal settings
 Alarm::Alarm() {
     off_pattern = "_";
     low_pattern = "XXXX";
         for (int i=0; i < 29; i++) {low_pattern.append("____");};
     medium_pattern = "X___";
     high_pattern = "X_X_X_X_X_________";
+
+    // save the terminal input settings
+    tcgetattr(STDIN_FILENO, &oldt);
 };
 
-// alarm threads
+// start the alarm
 void Alarm::start() {
+    // don't echo input, and allow chars one at a time
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // start threads
     running = true;
     output_thread = std::thread([=] {output(0);});
     input_thread = std::thread([=] {input();});
@@ -19,6 +29,7 @@ void Alarm::start() {
     input_thread.join();
 }
 
+// start only the output thread for debugging (don't change terminal settings)
 void Alarm::start_timed(int secs) {
     running = true;
     output_thread = std::thread([=] {output(secs);});
@@ -26,13 +37,17 @@ void Alarm::start_timed(int secs) {
     stop();
 }
 
-// output summary
+// stop the alarm
 void Alarm::stop() {
+    // reset the terminal input settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    // print summary
     std::cout << std::endl << "Elapsed time: " << easy_time*250 << " ms ";
     std::cout << "(" << easy_time << " characters printed)" << std::endl;
 }
 
 // print output
+// max time of 0 lets this run forever
 void Alarm::output(int max_time) {
     while(running && (max_time == 0 || easy_time < max_time)) {
         if (restart_pattern) {
@@ -99,4 +114,8 @@ std::string Alarm::get_pattern(int priority) {
     } else {
         return off_pattern;
     }
+}
+
+int Alarm::check_time() {
+    return easy_time;
 }
