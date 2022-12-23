@@ -1,6 +1,7 @@
 #ifndef ALARM_H
 #define ALARM_H
 #include <thread>
+#include <string>
 #include <stdio.h>
 #include <termios.h>
 
